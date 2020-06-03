@@ -1,0 +1,40 @@
+---
+title: "16s"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+```
+
+
+
+```{r import_excel_files, echo=FALSE}
+(assignment_table <- read.xlsx ("~/GitHub/microbiome_soil/sequences_processing/16S/assignment.table.16s.xlsx"))
+```
+
+
+
+```{r list_contaminated_OTU_PCR, echo=FALSE}
+(tot_read_PCR <- select(assignment_table, PCRCont) %>% 
+  colSums())
+(assignment_table %>% filter(PCRCont !=0) %>% 
+  mutate(pct_cont_OTU_PCR = (PCRCont/tot_read_PCR)*100))
+```
+
+```{r list_contaminated_OTU_ExtCont, echo=FALSE}
+(tot_read_ExtCont <- select(assignment_table, ExtCont) %>% 
+  colSums())
+(assignment_table %>% filter(ExtCont !=0) %>% 
+  mutate(pct_cont_OTU_ExtCont = (ExtCont/tot_read_ExtCont)*100))
+```
+
+```{r list_contaminated_OTU_Mock, echo=FALSE}
+(tot_read_Mock <- select(assignment_table, MockCom) %>% 
+  colSums())
+(assignment_table %>% filter(MockCom !=0) %>% 
+  mutate(pct_cont_OTU_Mock = (PCRCont/tot_read_Mock)*100))
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
