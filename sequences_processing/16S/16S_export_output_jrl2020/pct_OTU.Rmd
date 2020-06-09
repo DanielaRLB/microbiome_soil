@@ -1,0 +1,42 @@
+---
+title: "Pct of OTU per sample"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(dplyr)
+library(openxlsx)
+library(expss)
+library(purrr)
+library(rio)
+library(xlsx)
+```
+
+
+```{r import_excel_files, echo=FALSE}
+(assignment_table <- as.data.frame(read.xlsx("~/GitHub/assignment.table.16s.certa.xlsx")))
+```
+```{r data}
+## DATA SET TO USE
+assign_table_2 <- na.omit(assignment_table[,-c(1,3:7)])
+ad0 <- as.vector(NULL)
+(for (s in 2:ncol(assign_table_2))
+  {
+   ad <- tapply(assign_table_2[,s], as.factor(assign_table_2$Phylum), sum)*100 / sum(assign_table_2[,s])
+   ad0 <- cbind(ad0,ad)
+})
+colnames(ad0)<-names(assign_table_2)[2:ncol(assign_table_2)]
+ad0
+```
+``` {r excel}
+
+export(ad0, "pct.Otu.xlsx")
+getwd()
+
+```
+```{r data}
+## Verification
+colSums(ad0)
+```
